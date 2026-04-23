@@ -1,0 +1,104 @@
+<div class="space-y-6">
+
+  <!-- row 1: IOC totals + queue depth -->
+  <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
+
+    {% for row in ioc_totals %}
+    <div class="bg-slate-800 rounded-lg p-4 border border-slate-700 flex items-center justify-between">
+      <div>
+        <div class="text-slate-400 text-xs uppercase tracking-wider">{{ row.ioc_type }}</div>
+        <div class="text-2xl font-bold text-white mt-1">{{ "{:,}".format(row.count) }}</div>
+      </div>
+      <div class="text-3xl opacity-50">
+        {% if row.ioc_type == 'ip' %}🌐
+        {% elif row.ioc_type == 'domain' %}🔗
+        {% elif row.ioc_type == 'url' %}📎
+        {% elif row.ioc_type == 'hash' %}🔑
+        {% else %}📄{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- broadcast queue -->
+    <div class="bg-slate-800 rounded-lg p-4 border border-amber-700 flex items-center justify-between">
+      <div>
+        <div class="text-amber-400 text-xs uppercase tracking-wider">Broadcast Queue</div>
+        <div class="text-2xl font-bold text-amber-300 mt-1">{{ "{:,}".format(queue_depth) }}</div>
+        <div class="text-slate-500 text-xs mt-1">pending (score ≥ 70)</div>
+      </div>
+      <div class="text-3xl opacity-50">📡</div>
+    </div>
+
+  </div>
+
+  <!-- row 2: feed health -->
+  <div class="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-700 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+      Feed Health
+    </div>
+    <table class="w-full text-xs">
+      <thead>
+        <tr class="text-slate-500 border-b border-slate-700">
+          <th class="px-4 py-2 text-left">Feed</th>
+          <th class="px-4 py-2 text-left">Last Run</th>
+          <th class="px-4 py-2 text-left">Status</th>
+          <th class="px-4 py-2 text-right">Count</th>
+          <th class="px-4 py-2 text-left">Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in feed_health %}
+        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+          <td class="px-4 py-2 font-semibold text-slate-200">{{ f.feed }}</td>
+          <td class="px-4 py-2 text-slate-400">{{ f.ran_at[:19].replace('T',' ') if f.ran_at else '—' }}</td>
+          <td class="px-4 py-2">
+            {% if f.status == 'ok' %}
+              <span class="inline-flex items-center gap-1 text-green-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span> ok
+              </span>
+            {% else %}
+              <span class="inline-flex items-center gap-1 text-red-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span> error
+              </span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-2 text-right text-slate-300">{{ "{:,}".format(f.count) }}</td>
+          <td class="px-4 py-2 text-slate-500 truncate max-w-xs">{{ f.error_msg or '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="px-4 py-4 text-center text-slate-600">No feed runs recorded yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- row 3: top queried IOCs -->
+  <div class="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-700 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+      Top 10 Queried IOCs Today
+    </div>
+    <table class="w-full text-xs">
+      <thead>
+        <tr class="text-slate-500 border-b border-slate-700">
+          <th class="px-4 py-2 text-left">#</th>
+          <th class="px-4 py-2 text-left">IOC Value</th>
+          <th class="px-4 py-2 text-right">Queries</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for q in top_queried %}
+        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+          <td class="px-4 py-2 text-slate-600">{{ loop.index }}</td>
+          <td class="px-4 py-2 font-mono text-blue-300">{{ q.ioc_value }}</td>
+          <td class="px-4 py-2 text-right">
+            <span class="bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full">{{ q.count }}</span>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="px-4 py-4 text-center text-slate-600">No queries recorded today</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>

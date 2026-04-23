@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.pytest_cache/
+
+# Local env
+.env
+*.env.local
+
+# SQLite / sessions (re-created at runtime)
+*.db
+*.sqlite
+*.sqlite3
+events.db
+findings.db
+
+# Logs
+*.log
+logs/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
