@@ -39,7 +39,7 @@
 
 ```
 ssh ubuntu@wic02.sanctumsec.com
-# пароль: GhostTrace-02!
+# password/пароль: see https://wic-krakow.sanctumsec.com/wic-access-ghosttrace (Basic Auth: wic / stepup-krakow-2026)
 ```
 
 Вже встановлено: `git`, Python 3.10 + pip, Node.js LTS, `claude`, `codex`, AWS CLI + креденшли для `s3://wic-krakow-2026`.
