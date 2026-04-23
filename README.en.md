@@ -376,3 +376,27 @@ This way Trap and Hunter can start integrating before your real feeds are flowin
 - Archive daily snapshots to `s3://wic-krakow-2026/public/scout/snapshots/`
 
 Good hunting.
+
+---
+
+## Day 3 cross-cutting goals (AI-CTI themes)
+
+In addition to your team-specific deliverables above, **the following three themes from Day 3's curriculum (Modules 4–6) should visibly show up somewhere in your tool, your admin page, or your training artifacts.** Claude Code is the one that makes these feasible in a single day — use it.
+
+### Goal 1 — AI-Augmented CTI
+
+Use Claude (or any LLM) to automate at least one step of the CTI lifecycle *inside* your tool: extraction, classification, correlation, or enrichment of threat intelligence. This is Module 4's practical application.
+
+### Goal 2 — TTPs and AI-enabled Attack Patterns
+
+When you map behaviors to MITRE ATT&CK, also recognize TTPs that an AI-enabled adversary would produce differently: LLM-generated phishing prose, automated OSINT-driven recon, machine-generated polymorphic payloads, scripted beaconing at unusual intervals. Reflect this in your detections, hypotheses, IOC tags, or playbooks.
+
+### Goal 3 — AI Social Engineering (offense *and* defense)
+
+Real attackers now use AI to scale phishing, voice-cloning, and impersonation. Your tool should touch this at least once: capturing a social-engineering artifact, tagging one, alerting on it, enriching one, or — at minimum — documenting how your tool *would* react to an AI-enabled SE attempt.
+
+### How each goal lands in your work — team-specific guidance
+
+- **AI-Augmented CTI:** Pipe each newly-ingested IOC through Claude with a prompt like: *"Given this IOC (IP / domain / hash), describe its most likely tactic and technique (MITRE ATT&CK) in one sentence."* Store the LLM-generated description as `data.llm_tag`; show it in `/enrich` responses.
+- **TTPs / AI attack patterns:** When you pull URLhaus / ThreatFox, add a tag filter for entries that reference `phishing-kit`, `generated-phishing`, or campaigns the feeds flag as automated. Expose a `/ioc/ai-campaigns` endpoint listing those specifically.
+- **AI social engineering:** Include at least one feed focused on AI-generated phishing domains. The `ThreatFox` feed already tags this; promote those to a dedicated dashboard panel.
